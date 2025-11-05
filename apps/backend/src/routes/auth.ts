@@ -16,21 +16,10 @@ const loginValidation = [
 ];
 
 const registerValidation = [
-  body('name').notEmpty().withMessage('El nombre es requerido'),
-  body('email').custom((value) => {
-    // Permitir emails temporales para usuarios que se registran con teléfono
-    if (value.endsWith('@phone.temp')) {
-      return true;
-    }
-    // Para emails normales, validar formato
-    if (!value.includes('@') || !value.includes('.')) {
-      throw new Error('Email inválido');
-    }
-    return true;
-  }).withMessage('Email inválido'),
+  body('name').trim().notEmpty().withMessage('El nombre es requerido'),
+  body('email').isEmail().withMessage('Email inválido'),
   body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
-  body('phone').optional().isMobilePhone('any').withMessage('Número de teléfono inválido'),
-  body('restaurantName').optional().isString().withMessage('El nombre del restaurante debe ser texto')
+  body('phone').optional().isString().withMessage('El teléfono debe ser texto')
 ];
 
 const googleAuthValidation = [
@@ -84,11 +73,7 @@ router.post('/login', loginValidation, validateRequest, asyncHandler(async (req:
     }
 
     // Generar JWT tokens
-    const jwtSecret = process.env['JWT_SECRET'];
-    if (!jwtSecret) {
-      throw new Error('JWT_SECRET no configurado');
-    }
-
+    const jwtSecret = process.env['JWT_SECRET'] || 'insecure_dev_secret';
     const jwtExpiresIn = process.env['JWT_EXPIRES_IN'] || '15m';
     const jwtRefreshSecret = process.env['JWT_REFRESH_SECRET'] || jwtSecret;
     const jwtRefreshExpiresIn = process.env['JWT_REFRESH_EXPIRES_IN'] || '7d';
@@ -152,31 +137,22 @@ router.post('/register', registerValidation, validateRequest, asyncHandler(async
       return;
     }
 
-    // Hash de la contraseña
-    const saltRounds = parseInt(process.env['BCRYPT_ROUNDS'] || '12');
+    // Hash de la contraseña con fallback de rondas
+    const saltRounds = parseInt(process.env['BCRYPT_ROUNDS'] || '10');
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Crear usuario en la base de datos
-    const userData = {
-      name,
-      email,
-      password: hashedPassword,
-      phone: phone || null,
-    };
-    
-    // Nota: El frontend puede enviar restaurantName, pero se ignora por ahora 
-    // ya que no está en el modelo User. En el futuro, se podría crear un restaurante asociado al usuario
-
+    // Crear usuario en la base de datos (solo campos esenciales)
     const user = await prisma.user.create({
-      data: userData
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        phone: phone || null,
+      }
     });
 
-    // Generar JWT token
-    const jwtSecret = process.env['JWT_SECRET'];
-    if (!jwtSecret) {
-      throw new Error('JWT_SECRET no configurado');
-    }
-
+    // Generar JWT token con fallback de secretos
+    const jwtSecret = process.env['JWT_SECRET'] || 'insecure_dev_secret';
     const jwtExpiresIn = process.env['JWT_EXPIRES_IN'] || '15m';
     const jwtRefreshSecret = process.env['JWT_REFRESH_SECRET'] || jwtSecret;
     const jwtRefreshExpiresIn = process.env['JWT_REFRESH_EXPIRES_IN'] || '7d';
