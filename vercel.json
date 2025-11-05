@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build --workspace=@waiter-now/web",
-  "installCommand": "npm ci",
+  "installCommand": "npm ci --workspace=@waiter-now/web",
   "devCommand": "npm run dev --workspace=@waiter-now/web",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
