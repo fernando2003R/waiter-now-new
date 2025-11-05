@@ -27,6 +27,10 @@ jobs:
       - name: Build
         working-directory: apps/web
         run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_APP_NAME: "Waiter Now"
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
