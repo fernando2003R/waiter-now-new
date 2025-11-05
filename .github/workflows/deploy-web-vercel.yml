@@ -20,13 +20,11 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install deps (frontend)
-        working-directory: apps/web
+      - name: Install deps (root)
         run: npm ci
 
-      - name: Build
-        working-directory: apps/web
-        run: npm run build
+      - name: Build (web)
+        run: npm run build --workspace=@waiter-now/web
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_APP_NAME: "Waiter Now"

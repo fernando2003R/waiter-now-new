@@ -25,18 +25,14 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install deps (frontend)
-        working-directory: apps/web
+      - name: Install deps (root)
         run: npm ci
 
-      - name: Type check
-        working-directory: apps/web
-        run: npm run type-check
+      - name: Type check (web)
+        run: npm run type-check --workspace=@waiter-now/web
 
-      - name: Lint
-        working-directory: apps/web
-        run: npm run lint
+      - name: Lint (web)
+        run: npm run lint --workspace=@waiter-now/web
 
-      - name: Build
-        working-directory: apps/web
-        run: npm run build
+      - name: Build (web)
+        run: npm run build --workspace=@waiter-now/web
