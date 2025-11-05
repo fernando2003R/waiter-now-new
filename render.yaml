@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: waiter-now-backend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build --workspace=@waiter-now/backend
+    startCommand: npm run start --workspace=@waiter-now/backend
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    postDeployCommand: npx prisma migrate deploy --schema apps/backend/prisma/schema.prisma
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_VERSION
+        value: v1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: waiter-now-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://<tu-app>.vercel.app
+      - key: JWT_SECRET
+        value: CHANGE_ME
+      - key: JWT_REFRESH_SECRET
+        value: CHANGE_ME
+      - key: JWT_EXPIRES_IN
+        value: 7d
+
+databases:
+  - name: waiter-now-db
+    plan: free
+    region: oregon
