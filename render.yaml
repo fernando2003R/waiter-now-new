@@ -5,7 +5,7 @@ services:
     plan: free
     region: oregon
     buildCommand: npm ci && npm run db:generate --workspace=@waiter-now/backend && npm run build --workspace=@waiter-now/backend
-    startCommand: npx prisma migrate deploy --schema apps/backend/prisma/schema.prisma && npm run start --workspace=@waiter-now/backend
+    startCommand: npm run db:push --workspace=@waiter-now/backend && npm run start --workspace=@waiter-now/backend
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
