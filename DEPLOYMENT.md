@@ -8,6 +8,24 @@ Esta guía te ayudará a hacer deployment de tu aplicación **Waiter Now** de fo
 - **Backend**: Railway (Gratis hasta $5/mes)
 - **Base de Datos**: PostgreSQL en Railway (Gratis)
 
+## 🔑 Configurar GitHub Secrets (requerido para los Workflows)
+
+Configura estos secrets en tu repositorio: `Settings` → `Secrets and variables` → `Actions`.
+
+- Frontend (Vercel):
+  - `VERCEL_TOKEN`
+  - `VERCEL_ORG_ID`
+  - `VERCEL_PROJECT_ID`
+  - `VITE_API_URL` (ej: `https://tu-backend.railway.app/api/v1`)
+  - `VITE_GOOGLE_CLIENT_ID`
+- Backend (Railway):
+  - `RAILWAY_TOKEN`
+  - `RAILWAY_PROJECT_ID`
+
+Los workflows ya están preparados para usar estos secrets:
+- `.github/workflows/deploy-web-vercel.yml`
+- `.github/workflows/deploy-backend-railway.yml`
+
 ## 🎯 Paso 1: Deployment del Backend en Railway
 
 ### 1.1 Crear cuenta en Railway
