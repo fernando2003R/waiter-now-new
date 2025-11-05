@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build --workspace=@waiter-now/web",
+  "installCommand": "npm ci",
+  "devCommand": "npm run dev --workspace=@waiter-now/web",
+  "outputDirectory": "apps/web/dist",
+  "framework": "vite",
+  "headers": [
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/manifest.json", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ],
+  "rewrites": [
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
+  ]
+}
