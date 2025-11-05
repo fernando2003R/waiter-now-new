@@ -53,16 +53,6 @@ export const useGoogleAuth = () => {
       return false
     }
 
-    // Verificar si estamos en un dominio ngrok sin configurar
-    if (currentDomain.includes('ngrok-free.dev')) {
-      console.warn('⚠️ Dominio ngrok detectado:', currentDomain)
-      console.warn('📋 Para usar Google OAuth con ngrok:')
-      console.warn('1. Ve a Google Cloud Console')
-      console.warn('2. Agrega el dominio ngrok a "Orígenes autorizados de JavaScript"')
-      console.warn('3. Agrega las URIs de redirección correspondientes')
-      console.warn('4. Dominio actual:', currentDomain)
-    }
-
     if (typeof window !== 'undefined' && window.google) {
       try {
         const config: GoogleAuthConfig = {
@@ -77,7 +67,7 @@ export const useGoogleAuth = () => {
 
         window.google.accounts.id.initialize(config)
         setIsGoogleReady(true)
-        console.log('Google Auth inicializado correctamente')
+        console.log('Google Auth inicializado correctamente en', currentDomain)
         return true
       } catch (error) {
         console.error('Error al inicializar Google Auth:', error)
@@ -99,14 +89,7 @@ export const useGoogleAuth = () => {
       }
     } catch (error: any) {
       console.error('Error en autenticación con Google:', error)
-      
-      // Verificar si es un error de dominio no autorizado
-      const currentDomain = window.location.origin
-      if (currentDomain.includes('ngrok-free.dev')) {
-        toast.error('Dominio ngrok no autorizado en Google Cloud Console. Revisa la consola para instrucciones.')
-      } else {
-        toast.error('Error al autenticar con Google')
-      }
+      toast.error('Error al autenticar con Google')
     }
   }
 

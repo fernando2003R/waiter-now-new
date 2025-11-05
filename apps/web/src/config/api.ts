@@ -24,8 +24,7 @@ export const WS_URL = API_CONFIG.wsUrl;
 // Headers por defecto
 export const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
-  'Accept': 'application/json',
-  'ngrok-skip-browser-warning': 'true'
+  'Accept': 'application/json'
 };
 
 // Configuración de timeout
